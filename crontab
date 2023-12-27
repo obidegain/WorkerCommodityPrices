@@ -1,0 +1,2 @@
+# Ejecutar worker.py cada hora
+*/10 * * * * python3 /app/worker.py >> /var/log/cron.log 2>&1
