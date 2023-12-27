@@ -1,6 +1,5 @@
 import yfinance as yf
 from datetime import datetime
-from decimal import Decimal
 import re
 
 ticker_commodities = [

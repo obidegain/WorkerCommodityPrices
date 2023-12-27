@@ -1,12 +1,20 @@
 import psycopg2
+import os
 
 # Datos de conexión
-dbname = "price-commodity"
-user = "fl0user"
-password = "oZ3RWcjl6zBU"
-host = "ep-old-tooth-91354645.us-east-2.aws.neon.fl0.io"
-port = "5432"
-sslmode = "require"
+# dbname = "price-commodity"
+# user = "fl0user"
+# password = "oZ3RWcjl6zBU"
+# host = "ep-old-tooth-91354645.us-east-2.aws.neon.fl0.io"
+# port = "5432"
+# sslmode = "require"
+
+dbname = os.getenv('DBNAME')
+user = os.getenv('USER')
+password = os.getenv('PASSWORD')
+host = os.getenv('HOST')
+port = os.getenv('PORT')
+sslmode = os.getenv('SSLMODE')
 
 
 def connect_to_bbdd():
