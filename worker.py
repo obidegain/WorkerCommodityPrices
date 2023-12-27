@@ -11,7 +11,7 @@ def main():
         ticker = "ZSX24.CBT"
         last_price, last_date = yfinance_api_updater.get_last_trade(ticker)
         print(f"last_date = {last_date} - last_price = {last_price}")
-        date = f'Docker - {str(datetime.now())}'
+        date = f'Docker Cron- {str(datetime.now())}'
 
         new_record = (last_date, last_price, ticker, 0.393685, date)
 
