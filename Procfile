@@ -1,1 +1,1 @@
-worker: python worker.py
+worker: python trying_schedule.py
