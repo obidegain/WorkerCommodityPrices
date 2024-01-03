@@ -2,6 +2,7 @@ from schedule import every, repeat, run_pending
 import time
 from datetime import datetime
 
+
 @repeat(every(2).minutes)
 def job():
     try:
