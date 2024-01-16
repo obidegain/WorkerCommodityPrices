@@ -50,8 +50,6 @@ class MatbaApiUpdater:
         url = 'https://api.remarkets.primary.com.ar/auth/getToken'
         matba_api_username = os.getenv('MATBA_API_USERNAME')
         matba_api_password = os.getenv('MATBA_API_PASSWORD')
-        matba_api_username = 'octabidegain8345'
-        matba_api_password = 'viwioA1!'
 
         headers = {
             'X-Username': matba_api_username,
