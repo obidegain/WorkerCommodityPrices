@@ -1,34 +1,49 @@
-from yfinance_api import YFinanceApiUpdater
-from connect_with_bbdd import connect_to_bbdd, get_all_data_from_table, verify_conn_open, add_new_record_to_historical_prices
+from connect_with_bbdd import update_new_record
 from datetime import datetime
+from matba_api import MatbaApiUpdater
+from yfinance_api import YFinanceApiUpdater
+import schedule
+import time
 
 
-def main():
+# def main():
+def job():
     try:
+        print(f"Starting worker at {datetime.now()}")
         print("Estableciendo conexión con API")
-        yfinance_api_updater = YFinanceApiUpdater()
-        print("Obteniendo último tarde")
-        ticker = "ZSX24.CBT"
-        last_price, last_date = yfinance_api_updater.get_last_trade(ticker)
-        print(f"last_date = {last_date} - last_price = {last_price}")
-        date = f'Docker Cron- {str(datetime.now())}'
+        yfinance_api = YFinanceApiUpdater()
+        matba_api = MatbaApiUpdater()
 
-        new_record = (last_date, last_price, ticker, 0.393685, date)
-
+        last_trades = dict()
+        last_trades.update(yfinance_api.futures_dict)
+        last_trades.update(matba_api.futures_dict)
     except Exception as e:
         print(f'Error en conexión con API: {e}')
 
-    try:
-        print("Estableciendo conexión con BBDD")
-        conn = connect_to_bbdd()
-        if verify_conn_open(conn):
-            add_new_record_to_historical_prices(conn, new_record)
-            table = "HistoricalPrice"
-            rows = get_all_data_from_table(conn, table)
-            print(rows)
-    except Exception as e:
-        print(f'Error en conexión con API: {e}')
+    new_records = list()
+    for ticker, data in last_trades.items():
+        date = data.get('date')
+        last_price = data.get('last_price')
+        tax = data.get('tax')
+        now = f'Docker Cron- {str(datetime.now())}'
+
+        new_record = (date, last_price, ticker, tax, now)  # HAY QUE OBTENER EL TAX CORRECTO
+        new_records.append(new_record)
+    new_records_added, new_records_not_added = update_new_record(new_records)
+
+    print(f'New records added:')
+    print(new_records_added)
+    print(f'New records not added:')
+    print(new_records_not_added)
 
 
-if __name__ == '__main__':
-    main()
+schedule.every().day.at("02:12", "America/Buenos_Aires").do(job)
+
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+
+
+# if __name__ == '__main__':
+#     main()
