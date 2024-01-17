@@ -3,11 +3,23 @@ from datetime import datetime
 import re
 import yfinance as yf
 
+mapping_ticket_file_name = {
+        "ZCZ": "CRN.CME/NOV",
+        "ZCN": "CRN.CME/JUN",
+        "ZCK": "CRN.CME/ABR",
+        "ZCU": "CRN.CME/OCT",
+        "ZSF": "SOY.CME/DIC",
+        "ZSN": "SOY.CME/JUN",
+        "ZSK": "SOY.CME/ABR",
+        "ZSX": "SOY.CME/OCT"
+    }
+
 ticker_commodities = [
     "ZSX", # soja noviembre
     "ZSF", # soja enero
     "ZSK", # soja mayo
     "ZSN", # soja julio
+
     "ZCZ", # maiz diciembre
     "ZCK", # maiz mayo
     "ZCN", # maiz julio
@@ -34,7 +46,8 @@ class YFinanceApiUpdater:
                 ticker = commodity + year + ".CBT"
                 data = yf.download(ticker)
                 if len(data) > 0:
-                    dictionary[ticker] = data
+                    ticker_to_bbdd = f'{mapping_ticket_file_name.get(ticker)}{year}'
+                    dictionary[ticker_to_bbdd] = data
         return dictionary
 
     def get_cbot_taxes(self):
