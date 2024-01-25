@@ -44,9 +44,12 @@ class YFinanceApiUpdater:
             for i in range(5):
                 year = str(current_year + i)
                 ticker = commodity + year + ".CBT"
-                data = yf.download(ticker)
+                try:
+                    data = yf.download(ticker)
+                except:
+                    data = list()
                 if len(data) > 0:
-                    ticker_to_bbdd = f'{mapping_ticket_file_name.get(ticker)}{year}'
+                    ticker_to_bbdd = f'{mapping_ticket_file_name.get(commodity)}{year}'
                     dictionary[ticker_to_bbdd] = data
         return dictionary
 
@@ -63,12 +66,7 @@ class YFinanceApiUpdater:
     def get_all_last_close_price(self):
         futures_dict = dict()
         for ticker, data in self.all_data.items():
-            if any(symbol in ticker for symbol in soy_tickers):
-                commodity = "SOY"
-            elif any(symbol in ticker for symbol in crn_tickers):
-                commodity = "CRN"
-            else:
-                commodity = None
+            commodity = ticker.split(".")[0]
             last_price = data.iloc[-1]['Close']
             last_date = data.index[-1].date()
             date = f"{last_date.year}-{last_date.month}-{last_date.day}"
