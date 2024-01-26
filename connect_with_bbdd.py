@@ -128,3 +128,14 @@ def update_new_record(new_records):
             print(f'Error en conexión con BBDD: {e}')
 
     return new_records_added, new_records_not_added
+
+
+def get_next_index_value():
+    conn = connect_to_bbdd()
+    table = "HistoricalPrice"
+    cursor = conn.cursor()
+    # Obtener el próximo valor para la columna 'index'
+    cursor.execute(f"SELECT MAX(index) + 1 FROM {table}")
+    next_index = cursor.fetchone()[0] or 1
+    cursor.close()
+    return next_index

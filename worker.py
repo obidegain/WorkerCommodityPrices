@@ -1,4 +1,4 @@
-from connect_with_bbdd import update_new_record
+from connect_with_bbdd import update_new_record, get_next_index_value
 from datetime import datetime
 from matba_api import MatbaApiUpdater
 from yfinance_api import YFinanceApiUpdater
@@ -13,6 +13,7 @@ def job():
         print("Estableciendo conexión con API")
         yfinance_api = YFinanceApiUpdater()
         matba_api = MatbaApiUpdater()
+        last_index_from_ddbb = get_next_index_value()
 
         last_trades = dict()
         last_trades.update(yfinance_api.futures_dict)
@@ -21,13 +22,16 @@ def job():
         print(f'Error en conexión con API: {e}')
 
     new_records = list()
-    for ticker, data in last_trades.items():
+    for i, value in enumerate(last_trades.items()):
+        ticker = value[0]
+        data = value[1]
+        index = last_index_from_ddbb + i
         date = data.get('date')
         last_price = data.get('last_price')
         tax = data.get('tax')
         now = f'Docker Cron- {str(datetime.now())}'
 
-        new_record = (date, last_price, ticker, tax, now)  # HAY QUE OBTENER EL TAX CORRECTO
+        new_record = (date, last_price, ticker, tax, now, index)
         new_records.append(new_record)
     new_records_added, new_records_not_added = update_new_record(new_records)
 
