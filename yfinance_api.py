@@ -4,14 +4,14 @@ import re
 import yfinance as yf
 
 mapping_ticket_file_name = {
-        "ZCZ": "CRN.CME/NOV",
-        "ZCN": "CRN.CME/JUN",
-        "ZCK": "CRN.CME/ABR",
-        "ZCU": "CRN.CME/OCT",
-        "ZSF": "SOY.CME/DIC",
-        "ZSN": "SOY.CME/JUN",
-        "ZSK": "SOY.CME/ABR",
-        "ZSX": "SOY.CME/OCT"
+        "ZCZ": "CRN.CME/DIC",
+        "ZCN": "CRN.CME/JUL",
+        "ZCK": "CRN.CME/MAY",
+        "ZCU": "CRN.CME/SEP",
+        "ZSF": "SOY.CME/ENE",
+        "ZSN": "SOY.CME/JUL",
+        "ZSK": "SOY.CME/MAY",
+        "ZSX": "SOY.CME/NOV"
     }
 
 ticker_commodities = [
