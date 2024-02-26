@@ -143,7 +143,7 @@ class MatbaApiUpdater:
         taxes = get_all_data_from_table(conn, 'current_taxes')
         taxes_dict = dict()
         for row in taxes:
-            commodity, market, current_tax = row
+            commodity, market, current_tax, index = row
             if market == 'ROS':
                 taxes_dict[commodity] = current_tax
         return taxes_dict

@@ -55,13 +55,16 @@ class YFinanceApiUpdater:
 
     def get_cbot_taxes(self):
         conn = connect_to_bbdd()
-        taxes = get_all_data_from_table(conn, 'current_taxes')
-        taxes_dict = dict()
-        for row in taxes:
-            commodity, market, current_tax = row
-            if market == 'CBOT':
-                taxes_dict[commodity] = current_tax
-        return taxes_dict
+        if conn:
+            taxes = get_all_data_from_table(conn, 'current_taxes')
+            taxes_dict = dict()
+            for row in taxes:
+                commodity, market, current_tax, index = row
+                if market == 'CBOT':
+                    taxes_dict[commodity] = current_tax
+            return taxes_dict
+        else:
+            print("No se pudo obtener los taxes cbot")
 
     def get_all_last_close_price(self):
         futures_dict = dict()

@@ -8,6 +8,9 @@ import time
 
 # def main():
 def job():
+    last_trades = None
+    last_index_from_ddbb = None
+
     try:
         print(f"Starting worker at {datetime.now()}")
         print("Estableciendo conexión con API")
@@ -21,24 +24,25 @@ def job():
     except Exception as e:
         print(f'Error en conexión con API: {e}')
 
-    new_records = list()
-    for i, value in enumerate(last_trades.items()):
-        ticker = value[0]
-        data = value[1]
-        index = last_index_from_ddbb + i
-        date = data.get('date')
-        last_price = data.get('last_price')
-        tax = data.get('tax')
-        now = f'Docker Cron- {str(datetime.now())}'
+    if last_trades:
+        new_records = list()
+        for i, value in enumerate(last_trades.items()):
+            ticker = value[0]
+            data = value[1]
+            index = last_index_from_ddbb + i
+            date = data.get('date')
+            last_price = data.get('last_price')
+            tax = data.get('tax')
+            now = f'Docker Cron- {str(datetime.now())}'
 
-        new_record = (date, last_price, ticker, tax, now, index)
-        new_records.append(new_record)
-    new_records_added, new_records_not_added = update_new_record(new_records)
+            new_record = (date, last_price, ticker, tax, now, index)
+            new_records.append(new_record)
+        new_records_added, new_records_not_added = update_new_record(new_records)
 
-    print(f'New records added:')
-    print(new_records_added)
-    print(f'New records not added:')
-    print(new_records_not_added)
+        print(f'New records added:')
+        print(new_records_added)
+        print(f'New records not added:')
+        print(new_records_not_added)
 
 
 schedule.every().day.at("02:12", "America/Buenos_Aires").do(job)
