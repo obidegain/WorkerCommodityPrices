@@ -6,7 +6,6 @@ import schedule
 import time
 
 
-# def main():
 def job():
     last_trades = None
     last_index_from_ddbb = None
@@ -14,10 +13,12 @@ def job():
     try:
         print(f"Starting worker at {datetime.now()}")
         print("Estableciendo conexión con API")
-        print("Comenzando yfinance download")
-        yfinance_api = YFinanceApiUpdater()
         print("Comenzando matba_api download")
         matba_api = MatbaApiUpdater()
+        print("Comenzando yfinance download")
+        yfinance_api = YFinanceApiUpdater()
+        print("Pase las 2")
+
 
         last_index_from_ddbb = get_next_index_value()
         print(f'last_index_from_ddbb: {last_index_from_ddbb}')
@@ -50,13 +51,9 @@ def job():
         print(new_records_not_added)
 
 
-schedule.every().day.at("13:30", "America/Buenos_Aires").do(job)
+schedule.every().day.at("14:00", "America/Buenos_Aires").do(job)
 
 
 while True:
     schedule.run_pending()
     time.sleep(1)
-
-
-# if __name__ == '__main__':
-#     main()
