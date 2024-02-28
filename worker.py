@@ -14,8 +14,11 @@ def job():
     try:
         print(f"Starting worker at {datetime.now()}")
         print("Estableciendo conexión con API")
+        print("Comenzando yfinance download")
         yfinance_api = YFinanceApiUpdater()
+        print("Comenzando matba_api download")
         matba_api = MatbaApiUpdater()
+
         last_index_from_ddbb = get_next_index_value()
 
         last_trades = dict()
@@ -45,7 +48,7 @@ def job():
         print(new_records_not_added)
 
 
-schedule.every().day.at("02:12", "America/Buenos_Aires").do(job)
+schedule.every().day.at("11:30", "America/Buenos_Aires").do(job)
 
 
 while True:
