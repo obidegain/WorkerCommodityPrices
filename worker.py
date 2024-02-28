@@ -20,6 +20,7 @@ def job():
         matba_api = MatbaApiUpdater()
 
         last_index_from_ddbb = get_next_index_value()
+        print(f'last_index_from_ddbb: {last_index_from_ddbb}')
 
         last_trades = dict()
         last_trades.update(yfinance_api.futures_dict)
@@ -28,6 +29,7 @@ def job():
         print(f'Error en conexión con API: {e}')
 
     if last_trades:
+        print("Dentro de last_trades")
         new_records = list()
         for i, value in enumerate(last_trades.items()):
             ticker = value[0]
@@ -48,7 +50,7 @@ def job():
         print(new_records_not_added)
 
 
-schedule.every().day.at("11:30", "America/Buenos_Aires").do(job)
+schedule.every().day.at("13:30", "America/Buenos_Aires").do(job)
 
 
 while True:
