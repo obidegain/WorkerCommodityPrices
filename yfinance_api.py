@@ -51,9 +51,11 @@ class YFinanceApiUpdater:
                 if len(data) > 0:
                     ticker_to_bbdd = f'{mapping_ticket_file_name.get(commodity)}{year}'
                     dictionary[ticker_to_bbdd] = data
+        print(f'Se finalizaro get_data_of_all_commodities yfinance.')
         return dictionary
 
     def get_cbot_taxes(self):
+        print("Comenzando extracción de tax")
         conn = connect_to_bbdd()
         if conn:
             taxes = get_all_data_from_table(conn, 'current_taxes')

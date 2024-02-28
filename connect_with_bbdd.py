@@ -41,8 +41,8 @@ def execute_psql_command(conn, command):
 
 def add_new_record_to_historical_prices(conn, data_to_insert):
     insert_query = '''
-    INSERT INTO HistoricalPrice (date, price, ticker, tax, from_api)
-    VALUES (%s, %s, %s, %s, %s);
+    INSERT INTO HistoricalPrice (date, price, ticker, tax, from_api, index)
+    VALUES (%s, %s, %s, %s, %s, %s);
     '''
     cursor = conn.cursor()
     cursor.execute(insert_query, data_to_insert)

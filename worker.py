@@ -51,7 +51,7 @@ def job():
         print(new_records_not_added)
 
 
-schedule.every().day.at("14:00", "America/Buenos_Aires").do(job)
+schedule.every().day.at("18:00", "America/Buenos_Aires").do(job)
 
 
 while True:
