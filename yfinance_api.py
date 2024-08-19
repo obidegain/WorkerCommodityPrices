@@ -63,7 +63,7 @@ class YFinanceApiUpdater:
             for row in taxes:
                 commodity, market, current_tax, index = row
                 if market == 'CBOT':
-                    taxes_dict[commodity] = current_tax
+                    taxes_dict[commodity] = round(current_tax, 2)
             return taxes_dict
         else:
             print("No se pudo obtener los taxes cbot")

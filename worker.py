@@ -6,7 +6,7 @@ import schedule
 import time
 
 
-def job():
+def worker():
     last_trades = None
     last_index_from_ddbb = None
 
@@ -14,18 +14,25 @@ def job():
         print(f"Starting worker at {datetime.now()}")
         print("Estableciendo conexión con API")
         print("Comenzando matba_api download")
-        matba_api = MatbaApiUpdater()
-        print("Comenzando yfinance download")
-        yfinance_api = YFinanceApiUpdater()
-        print("Pase las 2")
-
 
         last_index_from_ddbb = get_next_index_value()
         print(f'last_index_from_ddbb: {last_index_from_ddbb}')
 
         last_trades = dict()
-        last_trades.update(yfinance_api.futures_dict)
-        last_trades.update(matba_api.futures_dict)
+
+        try:
+            matba_api = MatbaApiUpdater()
+            last_trades.update(matba_api.futures_dict)
+        except Exception as e:
+            print(e)
+        print("Comenzando yfinance download")
+        try:
+            yfinance_api = YFinanceApiUpdater()
+            last_trades.update(yfinance_api.futures_dict)
+        except Exception as e:
+            print(e)
+        print("Pase las 2")
+
     except Exception as e:
         print(f'Error en conexión con API: {e}')
 
@@ -39,7 +46,7 @@ def job():
             date = data.get('date')
             last_price = data.get('last_price')
             tax = data.get('tax')
-            now = f'Docker Cron- {str(datetime.now())}'
+            now = f'Ubuntu Cron - {str(datetime.now())}'
 
             new_record = (date, last_price, ticker, tax, now, index)
             new_records.append(new_record)
@@ -51,9 +58,5 @@ def job():
         print(new_records_not_added)
 
 
-schedule.every().day.at("18:00", "America/Buenos_Aires").do(job)
-
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+if __name__ == "__main__":
+    worker()

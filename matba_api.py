@@ -145,7 +145,7 @@ class MatbaApiUpdater:
         for row in taxes:
             commodity, market, current_tax, index = row
             if market == 'ROS':
-                taxes_dict[commodity] = current_tax
+                taxes_dict[commodity] = round(current_tax, 2)
         return taxes_dict
 
     def get_all_close_prices(self, symbol):

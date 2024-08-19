@@ -17,7 +17,6 @@ def connect_to_bbdd():
             password=password,
             host=host,
             port=port,
-            sslmode=sslmode
         )
         print("¡Conexión exitosa!")
         return conn
@@ -43,6 +42,16 @@ def add_new_record_to_historical_prices(conn, data_to_insert):
     insert_query = '''
     INSERT INTO HistoricalPrice (date, price, ticker, tax, from_api, index)
     VALUES (%s, %s, %s, %s, %s, %s);
+    '''
+    cursor = conn.cursor()
+    cursor.execute(insert_query, data_to_insert)
+    conn.commit()
+
+
+def add_new_record_to_current_taxes(conn, data_to_insert):
+    insert_query = '''
+    INSERT INTO current_taxes (commodity, market, current_tax, index)
+    VALUES (%s, %s, %s, %s);
     '''
     cursor = conn.cursor()
     cursor.execute(insert_query, data_to_insert)
@@ -139,3 +148,55 @@ def get_next_index_value():
     next_index = cursor.fetchone()[0] or 1
     cursor.close()
     return next_index
+
+
+def create_historical_price_table():
+    conn = connect_to_bbdd()
+    cursor = conn.cursor()
+    create_table_query = """
+        CREATE TABLE historicalprice (
+            date TEXT,
+            price DECIMAL,
+            ticker TEXT,
+            tax TEXT,
+            from_api TEXT,
+            index INTEGER
+        );
+    """
+    cursor.execute(create_table_query)
+    conn.commit()
+    cursor.close()
+
+
+def create_table_current_taxes():
+    conn = connect_to_bbdd()
+    cursor = conn.cursor()
+    create_table_query = """
+        CREATE TABLE current_taxes (
+            commodity TEXT,
+            market TEXT,
+            current_tax DECIMAL,
+            index INTEGER
+        );
+    """
+    cursor.execute(create_table_query)
+    conn.commit()
+    cursor.close()
+
+
+def upload_data_from_backup_current_taxes(path="/home/obidegain/Workspaces/FinancialArbitrageVisualization2/data/backup 02052024/backup_current_taxes.csv"):
+    import pandas as pd
+    from decimal import Decimal
+    df = pd.read_csv(path)
+
+    for i in range(len(df)):
+        row = df.iloc[i]
+        commodity = row['commodity']
+        market = row['market']
+        current_tax = row['current_tax']
+        index = row['index']
+
+        data_to_insert = (commodity, market, Decimal(current_tax), int(index))
+        conn = connect_to_bbdd()
+
+        add_new_record_to_current_taxes(conn, data_to_insert)
