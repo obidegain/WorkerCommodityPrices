@@ -76,7 +76,9 @@ class MtrInfoSpreadsheetScrapUpdater:
                 info = data[1]
                 price = info['Ajuste/Valor teórico']
                 date = info['Fecha de Datos']
-                row = {'date': date, 'last_price': Decimal(price.replace(',','.')), 'tax':tax}
+                day, month, year = date.split("-")
+                new_date = f'{year}-{month}-{day}'
+                row = {'date': new_date, 'last_price': Decimal(price.replace(',','.')), 'tax':tax}
                 futures_dict[ticker] = row
         return futures_dict
 
